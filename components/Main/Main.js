@@ -1,14 +1,18 @@
 import React from "react";
 import { View, Text, Button, Alert } from "react-native";
+import { useDispatch } from "react-redux";
+import { logInOutAction } from "../../store/actions";
 
 export const Main = () => {
+  const dispatch = useDispatch();
+
   const logOut = () => {
     // добавить разлогин через Redux
 
     Alert.alert("Выход из аккаунта", "Вы уверены?", [
       {
         text: "ОК",
-        onPress: () => console.log("OK Pressed"),
+        onPress: () => dispatch(logInOutAction(false)),
         style: "ok",
       },
       {
