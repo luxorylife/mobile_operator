@@ -29,7 +29,7 @@ const bossNav = () => {
     <Tab.Navigator
       initialRouteName="Profile"
       screenOptions={{
-        tabBarActiveTintColor: "#42f44b",
+        tabBarActiveTintColor: "#000",
         tabBarStyle: [
           {
             display: "flex",
@@ -37,7 +37,6 @@ const bossNav = () => {
           null,
         ],
       }}
-      style={{ width: "100%", backgroundColor: "#f33" }}
     >
       <Tab.Screen
         name="Reports"
@@ -47,6 +46,7 @@ const bossNav = () => {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="clipboard-list" size={size} color={color} />
           ),
+          tabBarActiveBackgroundColor: "#FBEEC1",
         }}
       />
 
@@ -58,6 +58,7 @@ const bossNav = () => {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="tasks" size={size} color={color} />
           ),
+          tabBarActiveBackgroundColor: "#8EE4AF",
         }}
       />
       <Tab.Screen
@@ -68,6 +69,7 @@ const bossNav = () => {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="home" size={size} color={color} />
           ),
+          tabBarActiveBackgroundColor: "#E7717D",
         }}
       />
     </Tab.Navigator>
@@ -79,15 +81,8 @@ const consultNav = () => {
     <Tab.Navigator
       initialRouteName="Profile"
       screenOptions={{
-        tabBarActiveTintColor: "#42f44b",
-        tabBarStyle: [
-          {
-            display: "flex",
-          },
-          null,
-        ],
+        tabBarActiveTintColor: "black",
       }}
-      style={{ width: "100%", backgroundColor: "#f33" }}
     >
       <Tab.Screen
         name="Sim"
@@ -97,6 +92,7 @@ const consultNav = () => {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="microchip" size={size} color={color} />
           ),
+          tabBarActiveBackgroundColor: "#FBEEC1",
         }}
       />
       <Tab.Screen
@@ -107,6 +103,7 @@ const consultNav = () => {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="home" size={size} color={color} />
           ),
+          tabBarActiveBackgroundColor: "#E7717D",
         }}
       />
     </Tab.Navigator>

@@ -1,9 +1,12 @@
 import React from "react";
-import { View, Text, Button, Alert } from "react-native";
+import { View, Text, Button, Alert, StyleSheet } from "react-native";
 
 // redux
 import { useDispatch } from "react-redux";
 import { logInOutAction, setUser } from "../../store/actions";
+
+// css
+import { mainStyle } from "../../MainStyle";
 
 export const Profile = () => {
   const dispatch = useDispatch();
@@ -29,9 +32,18 @@ export const Profile = () => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text>Профиль</Text>
       <Button title="Выйти из аккаунта" onPress={logOut} />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#E7717D",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
