@@ -4,6 +4,7 @@ import { reducer } from "./reducer";
 
 const initialStore = {
   isLogin: false,
+  user: {},
 };
 
 export const store = createStore(reducer, initialStore, composeWithDevTools());

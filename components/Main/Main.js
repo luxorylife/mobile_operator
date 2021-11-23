@@ -1,32 +1,114 @@
 import React from "react";
-import { View, Text, Button, Alert } from "react-native";
-import { useDispatch } from "react-redux";
-import { logInOutAction } from "../../store/actions";
+
+// nav
+import { FontAwesome5 } from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+// nav components
+import { Profile } from "../Pages/Profile";
+import { Lists, Reports } from "../Pages/BossPages";
+import { Sims } from "../Pages/ConsultSuppPages";
+
+// redux
+import { useSelector } from "react-redux";
+
+// const
+import { ROLE_BOSS } from "../../const/roles";
+
+const Tab = createBottomTabNavigator();
 
 export const Main = () => {
-  const dispatch = useDispatch();
+  const isBoss = useSelector((state) => state.user.role === ROLE_BOSS);
 
-  const logOut = () => {
-    // добавить разлогин через Redux
+  if (isBoss) return bossNav();
+  else return consultNav();
+};
 
-    Alert.alert("Выход из аккаунта", "Вы уверены?", [
-      {
-        text: "ОК",
-        onPress: () => dispatch(logInOutAction(false)),
-        style: "ok",
-      },
-      {
-        text: "Отмена",
-        onPress: () => console.log("Cancel Pressed"),
-        style: "cancel",
-      },
-    ]);
-  };
-
+const bossNav = () => {
   return (
-    <View>
-      <Text>Контент</Text>
-      <Button title="Выйти из аккаунта" onPress={logOut} />
-    </View>
+    <Tab.Navigator
+      initialRouteName="Profile"
+      screenOptions={{
+        tabBarActiveTintColor: "#42f44b",
+        tabBarStyle: [
+          {
+            display: "flex",
+          },
+          null,
+        ],
+      }}
+      style={{ width: "100%", backgroundColor: "#f33" }}
+    >
+      <Tab.Screen
+        name="Reports"
+        component={Reports}
+        options={{
+          tabBarLabel: "Отчеты",
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome5 name="clipboard-list" size={size} color={color} />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Lists"
+        component={Lists}
+        options={{
+          tabBarLabel: "Списки",
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome5 name="tasks" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarLabel: "Профиль",
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome5 name="home" size={size} color={color} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+const consultNav = () => {
+  return (
+    <Tab.Navigator
+      initialRouteName="Profile"
+      screenOptions={{
+        tabBarActiveTintColor: "#42f44b",
+        tabBarStyle: [
+          {
+            display: "flex",
+          },
+          null,
+        ],
+      }}
+      style={{ width: "100%", backgroundColor: "#f33" }}
+    >
+      <Tab.Screen
+        name="Sim"
+        component={Sims}
+        options={{
+          tabBarLabel: "Sim-карты",
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome5 name="microchip" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarLabel: "Профиль",
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome5 name="home" size={size} color={color} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 };

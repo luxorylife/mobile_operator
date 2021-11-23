@@ -1,4 +1,4 @@
-import { LOG_IN_OUT } from "./actionTypes";
+import { LOG_IN_OUT, SET_USER } from "./actionTypes";
 
 export const reducer = (state, action) => {
   switch (action.type) {
@@ -7,6 +7,13 @@ export const reducer = (state, action) => {
       return {
         ...state,
         isLogin: action.payload,
+      };
+
+    case SET_USER:
+      console.log("setting user");
+      return {
+        ...state,
+        user: action.payload,
       };
 
     default:
