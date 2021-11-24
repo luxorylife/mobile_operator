@@ -84,7 +84,7 @@ const windowStyle = StyleSheet.create({
   inp: {
     width: "50%",
     marginBottom: 10,
-    fontSize: 15,
+    fontSize: 20,
     paddingLeft: 5,
     borderBottomWidth: 1,
   },

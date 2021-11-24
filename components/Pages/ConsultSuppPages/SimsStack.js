@@ -4,10 +4,10 @@ import { View, Text, StyleSheet } from "react-native";
 // css
 import { mainStyle } from "../../../MainStyle";
 
-export const Reports = () => {
+export const SimsStack = () => {
   return (
     <View style={styles.container}>
-      <Text>Отчеты</Text>
+      <Text>Sim-карты</Text>
     </View>
   );
 };

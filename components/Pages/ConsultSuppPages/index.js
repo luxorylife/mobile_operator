@@ -1,1 +1,1 @@
-export { Sims } from "./Sims";
+export { SimsStack } from "./SimsStack";

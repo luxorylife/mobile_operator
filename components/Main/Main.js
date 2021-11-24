@@ -6,8 +6,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 // nav components
 import { Profile } from "../Pages/Profile";
-import { Lists, Reports } from "../Pages/BossPages";
-import { Sims } from "../Pages/ConsultSuppPages";
+import { ListsStack, ReportsStack } from "../Pages/BossPages";
+import { SimsStack } from "../Pages/ConsultSuppPages";
 
 // redux
 import { useSelector } from "react-redux";
@@ -39,25 +39,27 @@ const bossNav = () => {
       }}
     >
       <Tab.Screen
-        name="Reports"
-        component={Reports}
+        name="ReportsStack"
+        component={ReportsStack}
         options={{
           tabBarLabel: "Отчеты",
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="clipboard-list" size={size} color={color} />
           ),
+          headerShown: false,
           tabBarActiveBackgroundColor: "#FBEEC1",
         }}
       />
 
       <Tab.Screen
-        name="Lists"
-        component={Lists}
+        name="ListsStack"
+        component={ListsStack}
         options={{
           tabBarLabel: "Списки",
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="tasks" size={size} color={color} />
           ),
+          headerShown: false,
           tabBarActiveBackgroundColor: "#8EE4AF",
         }}
       />
@@ -69,6 +71,7 @@ const bossNav = () => {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="home" size={size} color={color} />
           ),
+          headerShown: false,
           tabBarActiveBackgroundColor: "#E7717D",
         }}
       />
@@ -86,12 +89,13 @@ const consultNav = () => {
     >
       <Tab.Screen
         name="Sim"
-        component={Sims}
+        component={SimsStack}
         options={{
           tabBarLabel: "Sim-карты",
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="microchip" size={size} color={color} />
           ),
+          headerShown: false,
           tabBarActiveBackgroundColor: "#FBEEC1",
         }}
       />
@@ -103,6 +107,7 @@ const consultNav = () => {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="home" size={size} color={color} />
           ),
+          headerShown: false,
           tabBarActiveBackgroundColor: "#E7717D",
         }}
       />
