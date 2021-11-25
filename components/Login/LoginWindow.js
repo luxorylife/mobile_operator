@@ -17,6 +17,7 @@ import { logInOutAction, setUser } from "../../store/actions";
 
 // const
 import { ROLE_BOSS, ROLE_CONSULT, ROLE_SUPP } from "../../const/roles";
+import { getRole } from "../../requests/requests";
 
 export const LoginWindow = () => {
   const [login, setLogin] = React.useState("");
@@ -24,15 +25,15 @@ export const LoginWindow = () => {
 
   const dispatch = useDispatch();
 
-  const logIn = () => {
+  const logIn = async () => {
     // проверка заполненности значений
-    // if (!login.length || !password.length){
-    //   Alert.alert('Значения пусты!');
-    //   return;
-    // }
+    if (!login.length || !password.length) {
+      Alert.alert("Значения пусты!");
+      return;
+    }
 
     //добавить запрос авторизации на сервер (роль получаем исходя от ответа сервера)
-    const role = login;
+    const role = await getRole(login, password);
 
     if (role !== ROLE_BOSS && role !== ROLE_CONSULT && role !== ROLE_SUPP) {
       Alert.alert("Отказано в доступе");

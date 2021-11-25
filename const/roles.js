@@ -1,3 +1,3 @@
-export const ROLE_BOSS = "BOSS";
-export const ROLE_CONSULT = "SHOP";
-export const ROLE_SUPP = "SUPPORT";
+export const ROLE_BOSS = "boss";
+export const ROLE_CONSULT = "shop";
+export const ROLE_SUPP = "support";
