@@ -1,4 +1,5 @@
 import React from "react";
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 // stack nav
 import { createStackNavigator } from "@react-navigation/stack";
@@ -29,12 +30,24 @@ export const ListsStack = () => {
       <Stack.Screen
         name="TariffsList"
         component={TariffsList}
-        options={{ title: "Список тарифов" }}
+        options={({ navigation }) => ({
+          title: "Список тарифов",
+          headerRight: () => (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("TariffItem", { isNew: true })}
+            >
+              <Text style={styles.text}>Добавить</Text>
+            </TouchableOpacity>
+          ),
+        })}
       />
       <Stack.Screen
         name="TariffItem"
         component={TariffItem}
-        options={{ title: "Тариф" }}
+        options={({ route }) => ({
+          title: route.params.isNew ? "Новый тариф" : "Тариф",
+        })}
       />
       <Stack.Screen
         name="ServicesList"
@@ -49,3 +62,16 @@ export const ListsStack = () => {
     </Stack.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  button: {
+    marginRight: 20,
+    backgroundColor: "#8EE4AF",
+    padding: 8,
+  },
+  text: {
+    fontSize: 15,
+    color: "black",
+    fontWeight: "bold",
+  },
+});

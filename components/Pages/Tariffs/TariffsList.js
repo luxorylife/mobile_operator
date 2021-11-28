@@ -7,6 +7,9 @@ import {
   StyleSheet,
 } from "react-native";
 
+// nav
+import { useIsFocused } from "@react-navigation/native";
+
 // api
 import { getTariffs } from "../../../requests/requests";
 
@@ -16,14 +19,16 @@ import { useSelector } from "react-redux";
 // icons
 import { AntDesign } from "@expo/vector-icons";
 
-export const TariffsList = ({ navigation }) => {
+export const TariffsList = ({ navigation, route }) => {
   const [tariffs, setTariffs] = useState([]);
 
   const user = useSelector((state) => state.user);
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    loadData();
-  }, []);
+    if (isFocused) loadData();
+  }, [isFocused]);
 
   const loadData = async () => {
     const response = await getTariffs(user.login, user.password);
@@ -38,7 +43,9 @@ export const TariffsList = ({ navigation }) => {
         renderItem={({ item }) => (
           <ListItem
             tariff={item}
-            nav={() => navigation.navigate("TariffItem", item)}
+            nav={() =>
+              navigation.navigate("TariffItem", { item: item, isNew: false })
+            }
           />
         )}
         keyExtractor={(item) => item.id}
