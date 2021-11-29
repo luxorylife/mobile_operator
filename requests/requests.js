@@ -61,6 +61,18 @@ export const setTariff = async (login, password, tariff) => {
   else return undefined;
 };
 
+export const setService = async (login, password, service) => {
+  const result = await postRequest(
+    `${API_URL}services`,
+    login,
+    password,
+    service
+  );
+
+  if (result) return result;
+  else return undefined;
+};
+
 const postRequest = async (url, login, password, postData) => {
   try {
     const response = await fetch(url, {
@@ -86,6 +98,17 @@ const postRequest = async (url, login, password, postData) => {
 export const deleteTariff = async (login, password, id) => {
   const result = await deleteRequest(
     `${API_URL}tariffs?id=eq.${id}`,
+    login,
+    password
+  );
+
+  if (result) return result;
+  else return undefined;
+};
+
+export const deleteService = async (login, password, id) => {
+  const result = await deleteRequest(
+    `${API_URL}services?id=eq.${id}`,
     login,
     password
   );

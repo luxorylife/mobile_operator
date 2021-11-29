@@ -7,6 +7,9 @@ import {
   StyleSheet,
 } from "react-native";
 
+// nav
+import { useIsFocused } from "@react-navigation/native";
+
 // api
 import { getServices } from "../../../requests/requests";
 
@@ -21,9 +24,11 @@ export const ServicesList = ({ navigation }) => {
 
   const user = useSelector((state) => state.user);
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    loadData();
-  }, []);
+    if (isFocused) loadData();
+  }, [isFocused]);
 
   const loadData = async () => {
     const response = await getServices(user.login, user.password);
@@ -38,7 +43,9 @@ export const ServicesList = ({ navigation }) => {
         renderItem={({ item }) => (
           <ListItem
             service={item}
-            nav={() => navigation.navigate("ServiceItem", item)}
+            nav={() =>
+              navigation.navigate("ServiceItem", { item: item, isNew: false })
+            }
           />
         )}
         keyExtractor={(item) => item.id}
@@ -69,6 +76,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 10,
     marginTop: 10,
+    borderRadius: 8,
   },
   header: {
     fontSize: 20,
@@ -78,7 +86,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#8EE4AF",
     flex: 1,
-
+    paddingHorizontal: 8,
     alignItems: "center",
   },
   price: {

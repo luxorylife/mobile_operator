@@ -18,7 +18,7 @@ export const ReportsStack = () => {
       screenOptions={{
         headerStyle: { backgroundColor: "#000" },
         headerTintColor: "#fff",
-        headerStatusBarHeight: 50,
+        // headerStatusBarHeight: 50,
         headerTitleStyle: { fontWeight: "bold" },
       }}
     >

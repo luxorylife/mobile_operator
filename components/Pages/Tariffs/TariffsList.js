@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 10,
     marginTop: 10,
+    borderRadius: 8,
   },
   header: {
     fontSize: 20,
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#8EE4AF",
     flex: 1,
-
+    paddingHorizontal: 8,
     alignItems: "center",
   },
   price: {

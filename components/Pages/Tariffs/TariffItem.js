@@ -259,10 +259,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#FBEEC1",
     marginTop: 10,
     borderWidth: 1,
+    borderRadius: 8,
   },
   button: {
     backgroundColor: "white",
     padding: 8,
+    borderRadius: 96,
   },
   btn_text: {
     fontSize: 15,
@@ -272,6 +274,7 @@ const styles = StyleSheet.create({
   buttonDel: {
     backgroundColor: "black",
     padding: 8,
+    borderRadius: 96,
   },
   btn_del_text: {
     fontSize: 15,

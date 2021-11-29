@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#8EE4AF",
     flex: 1,
     alignItems: "center",
+    paddingHorizontal: 8,
   },
   button: {
     backgroundColor: "#FBEEC1",
@@ -42,6 +43,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 10,
     marginTop: 10,
+    borderRadius: 8,
   },
   header: {
     fontSize: 20,

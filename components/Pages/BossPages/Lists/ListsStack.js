@@ -18,7 +18,7 @@ export const ListsStack = () => {
       screenOptions={{
         headerStyle: { backgroundColor: "#000" },
         headerTintColor: "#fff",
-        headerStatusBarHeight: 50,
+        // headerStatusBarHeight: 50,
         headerTitleStyle: { fontWeight: "bold" },
       }}
     >
@@ -52,7 +52,19 @@ export const ListsStack = () => {
       <Stack.Screen
         name="ServicesList"
         component={ServicesList}
-        options={{ title: "Список услуг" }}
+        options={({ navigation }) => ({
+          title: "Список услуг",
+          headerRight: () => (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() =>
+                navigation.navigate("ServiceItem", { isNew: true })
+              }
+            >
+              <Text style={styles.text}>Добавить</Text>
+            </TouchableOpacity>
+          ),
+        })}
       />
       <Stack.Screen
         name="ServiceItem"
@@ -68,6 +80,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
     backgroundColor: "#8EE4AF",
     padding: 8,
+    borderRadius: 96,
   },
   text: {
     fontSize: 15,

@@ -71,8 +71,14 @@ const bossNav = () => {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="home" size={size} color={color} />
           ),
-          headerShown: false,
-          tabBarActiveBackgroundColor: "#E7717D",
+          headerTintColor: "white",
+          headerTitle: "Профиль",
+
+          // headerStatusBarHeight: 50,
+          headerStyle: {
+            backgroundColor: "black",
+          },
+          tabBarActiveBackgroundColor: "#7395AE",
         }}
       />
     </Tab.Navigator>
