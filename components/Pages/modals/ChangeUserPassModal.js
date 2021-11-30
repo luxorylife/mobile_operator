@@ -4,53 +4,62 @@ import {
   Modal,
   FormControl,
   Input,
-  Radio,
   Center,
   NativeBaseProvider,
 } from "native-base";
 import { Alert } from "react-native";
 
 // api
-import { createUser } from "../../../requests/requests";
+import { changePassword } from "../../../requests/requests";
 
 // redux
-import { useSelector } from "react-redux";
-
-// roles
-import { ROLE_BOSS, ROLE_CONSULT, ROLE_SUPP } from "../../../const/roles";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser, logInOutAction } from "../../../store/actions";
 
 // toast
 import Toast from "react-native-toast-message";
 
-export const CreateUserModal = ({ openModal, closeModal }) => {
+export const ChangeUserPassModal = ({ openModal, closeModal }) => {
   const [name, setName] = useState("");
+  const [oldPass, setOldPass] = useState("");
   const [pass, setPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
-  const [role, setRole] = useState("");
 
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const btnSaveHandler = async () => {
     if (pass !== confirmPass) {
       Alert.alert(
-        "Пароли не совдапают!",
+        "Новые пароли не совдапают!",
         "Пожалуйста, убедитесь, чтобы введенные пароли совпадали"
       );
       return;
     }
 
-    if (!(name && pass && confirmPass)) return;
+    if (!(name && oldPass && pass && confirmPass)) return;
 
-    const newUser = {
-      name: name,
-      password: pass,
-      role: role,
-    };
+    const response = await changePassword(name, oldPass, pass);
 
-    const response = await createUser(user.login, user.password, newUser);
+    if (!response) {
+      Alert.alert(
+        "Ошибка доступа",
+        "Возможно, вы ввели неверные имя или пароль пользователя"
+      );
+      return;
+    }
 
-    if (response && response === 201) {
+    if (response && response === 204) {
+      if (name === user.name && oldPass === user.password)
+        dispatch(
+          setUser({
+            role: user.role,
+            login: user.login,
+            password: pass,
+          })
+        );
       console.log(response);
+
       showToast();
     }
 
@@ -61,16 +70,16 @@ export const CreateUserModal = ({ openModal, closeModal }) => {
     Toast.show({
       type: "success",
       text1: "Успех",
-      text2: "Пользователь добавлен!",
+      text2: "Пароль изменен!",
     });
   };
 
   const onClose = () => {
     closeModal();
     setName("");
+    setOldPass("");
     setPass("");
     setConfirmPass("");
-    setRole("");
   };
 
   return (
@@ -78,34 +87,22 @@ export const CreateUserModal = ({ openModal, closeModal }) => {
       <Modal isOpen={openModal} onClose={onClose} avoidKeyboard={true}>
         <Modal.Content>
           <Modal.CloseButton />
-          <Modal.Header>Создание пользователя</Modal.Header>
+          <Modal.Header>Изменение пароля пользователя</Modal.Header>
           <Modal.Body>
             <FormControl>
               <FormControl.Label>Имя</FormControl.Label>
               <Input value={name} onChangeText={(text) => setName(text)} />
             </FormControl>
             <FormControl>
-              <FormControl.Label>Роль</FormControl.Label>
-              <Radio.Group
-                justifyContent="space-around"
-                value={role}
-                onChange={(nextValue) => {
-                  setRole(nextValue);
-                }}
-              >
-                <Radio colorScheme="emerald" value={ROLE_BOSS} my={1}>
-                  Босс
-                </Radio>
-                <Radio colorScheme="secondary" value={ROLE_CONSULT} my={1}>
-                  Консультант
-                </Radio>
-                <Radio colorScheme="warning" value={ROLE_SUPP} my={1}>
-                  Тех. поддержка
-                </Radio>
-              </Radio.Group>
+              <FormControl.Label>Старый пароль</FormControl.Label>
+              <Input
+                type="password"
+                value={oldPass}
+                onChangeText={(text) => setOldPass(text)}
+              />
             </FormControl>
             <FormControl>
-              <FormControl.Label>Пароль</FormControl.Label>
+              <FormControl.Label>Новый пароль</FormControl.Label>
               <Input
                 type="password"
                 value={pass}
@@ -126,7 +123,7 @@ export const CreateUserModal = ({ openModal, closeModal }) => {
               <Button onPress={onClose} variant="ghost" colorScheme="blueGray">
                 Отмена
               </Button>
-              <Button onPress={btnSaveHandler}>Создать</Button>
+              <Button onPress={btnSaveHandler}>Изменить</Button>
             </Button.Group>
           </Modal.Footer>
         </Modal.Content>
@@ -134,13 +131,3 @@ export const CreateUserModal = ({ openModal, closeModal }) => {
     </>
   );
 };
-
-// export const CreateUserModal = ({ openModal, closeModal }) => {
-//   return (
-//     <NativeBaseProvider>
-//       <Center flex={1} px="3">
-//         <Example openModal={openModal} closeModal={closeModal} />
-//       </Center>
-//     </NativeBaseProvider>
-//   );
-// };

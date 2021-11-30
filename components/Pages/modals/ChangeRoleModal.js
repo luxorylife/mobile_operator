@@ -11,10 +11,10 @@ import {
 import { Alert } from "react-native";
 
 // api
-import { createUser } from "../../../requests/requests";
+import { changeRole } from "../../../requests/requests";
 
 // redux
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 // roles
 import { ROLE_BOSS, ROLE_CONSULT, ROLE_SUPP } from "../../../const/roles";
@@ -22,35 +22,25 @@ import { ROLE_BOSS, ROLE_CONSULT, ROLE_SUPP } from "../../../const/roles";
 // toast
 import Toast from "react-native-toast-message";
 
-export const CreateUserModal = ({ openModal, closeModal }) => {
+export const ChangeRoleModal = ({ openModal, closeModal }) => {
   const [name, setName] = useState("");
-  const [pass, setPass] = useState("");
-  const [confirmPass, setConfirmPass] = useState("");
   const [role, setRole] = useState("");
 
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const btnSaveHandler = async () => {
-    if (pass !== confirmPass) {
-      Alert.alert(
-        "Пароли не совдапают!",
-        "Пожалуйста, убедитесь, чтобы введенные пароли совпадали"
-      );
-      return;
-    }
+    if (!(name && role)) return;
 
-    if (!(name && pass && confirmPass)) return;
+    const response = await changeRole(user.login, user.password, name, role);
 
-    const newUser = {
-      name: name,
-      password: pass,
-      role: role,
-    };
-
-    const response = await createUser(user.login, user.password, newUser);
-
-    if (response && response === 201) {
+    if (response && response === 204) {
+      if (name === user.login && role !== user.role) {
+        dispatch(logInOutAction(false));
+        dispatch(setUser({}));
+      }
       console.log(response);
+
       showToast();
     }
 
@@ -61,15 +51,13 @@ export const CreateUserModal = ({ openModal, closeModal }) => {
     Toast.show({
       type: "success",
       text1: "Успех",
-      text2: "Пользователь добавлен!",
+      text2: "Роль изменена!",
     });
   };
 
   const onClose = () => {
     closeModal();
     setName("");
-    setPass("");
-    setConfirmPass("");
     setRole("");
   };
 
@@ -78,14 +66,14 @@ export const CreateUserModal = ({ openModal, closeModal }) => {
       <Modal isOpen={openModal} onClose={onClose} avoidKeyboard={true}>
         <Modal.Content>
           <Modal.CloseButton />
-          <Modal.Header>Создание пользователя</Modal.Header>
+          <Modal.Header>Изменение роли</Modal.Header>
           <Modal.Body>
             <FormControl>
-              <FormControl.Label>Имя</FormControl.Label>
+              <FormControl.Label>Имя пользователя</FormControl.Label>
               <Input value={name} onChangeText={(text) => setName(text)} />
             </FormControl>
             <FormControl>
-              <FormControl.Label>Роль</FormControl.Label>
+              <FormControl.Label>Новая роль</FormControl.Label>
               <Radio.Group
                 justifyContent="space-around"
                 value={role}
@@ -104,29 +92,13 @@ export const CreateUserModal = ({ openModal, closeModal }) => {
                 </Radio>
               </Radio.Group>
             </FormControl>
-            <FormControl>
-              <FormControl.Label>Пароль</FormControl.Label>
-              <Input
-                type="password"
-                value={pass}
-                onChangeText={(text) => setPass(text)}
-              />
-            </FormControl>
-            <FormControl>
-              <FormControl.Label>Подтверждение пароля</FormControl.Label>
-              <Input
-                type="password"
-                value={confirmPass}
-                onChangeText={(text) => setConfirmPass(text)}
-              />
-            </FormControl>
           </Modal.Body>
           <Modal.Footer>
             <Button.Group>
               <Button onPress={onClose} variant="ghost" colorScheme="blueGray">
                 Отмена
               </Button>
-              <Button onPress={btnSaveHandler}>Создать</Button>
+              <Button onPress={btnSaveHandler}>Изменить</Button>
             </Button.Group>
           </Modal.Footer>
         </Modal.Content>
@@ -134,13 +106,3 @@ export const CreateUserModal = ({ openModal, closeModal }) => {
     </>
   );
 };
-
-// export const CreateUserModal = ({ openModal, closeModal }) => {
-//   return (
-//     <NativeBaseProvider>
-//       <Center flex={1} px="3">
-//         <Example openModal={openModal} closeModal={closeModal} />
-//       </Center>
-//     </NativeBaseProvider>
-//   );
-// };

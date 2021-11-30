@@ -16,8 +16,13 @@ import { logInOutAction, setUser } from "../../store/actions";
 // user
 import { ROLE_BOSS } from "../../const/roles";
 
-// icons
-import { Example } from "./modals/CreateUserModal";
+// modals
+import {
+  CreateUserModal,
+  ChangePassModal,
+  ChangeUserPassModal,
+  ChangeRoleModal,
+} from "./modals/";
 
 export const Profile = () => {
   const dispatch = useDispatch();
@@ -73,6 +78,13 @@ export const Profile = () => {
           }}
         />
       )}
+      {user.role !== ROLE_BOSS && (
+        <UserMenu
+          changePass={() => {
+            setModalChangePassword(true);
+          }}
+        />
+      )}
       {/* <Button title="Выйти из аккаунта" onPress={logOut} /> */}
 
       <TouchableOpacity
@@ -84,9 +96,21 @@ export const Profile = () => {
         </Text>
       </TouchableOpacity>
 
-      <Example
+      <CreateUserModal
         openModal={modalCreate}
         closeModal={() => setModalCreate(false)}
+      />
+      <ChangePassModal
+        openModal={modalChangePassword}
+        closeModal={() => setModalChangePassword(false)}
+      />
+      <ChangeRoleModal
+        openModal={modalChangeRole}
+        closeModal={() => setModalChangeRole(false)}
+      />
+      <ChangeUserPassModal
+        openModal={modalChangeUserPassword}
+        closeModal={() => setModalChangeUserPassword(false)}
       />
     </View>
   );
@@ -105,6 +129,14 @@ const BossMenu = ({ create, changePass, changeRole, changeUserPass }) => (
     </TouchableOpacity>
     <TouchableOpacity style={styles.button} onPress={changeUserPass}>
       <Text style={{ fontWeight: "bold" }}>Изменить пароль пользователя</Text>
+    </TouchableOpacity>
+  </View>
+);
+
+const UserMenu = ({ changePass }) => (
+  <View style={styles.menu}>
+    <TouchableOpacity style={styles.button} onPress={changePass}>
+      <Text style={{ fontWeight: "bold" }}>Изменить пароль</Text>
     </TouchableOpacity>
   </View>
 );

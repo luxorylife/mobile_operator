@@ -35,6 +35,11 @@ export const LoginWindow = () => {
     //добавить запрос авторизации на сервер (роль получаем исходя от ответа сервера)
     const role = await getRole(login, password);
 
+    if (!role) {
+      Alert.alert("Неверный логин или пароль");
+      return;
+    }
+
     if (role !== ROLE_BOSS && role !== ROLE_CONSULT && role !== ROLE_SUPP) {
       Alert.alert("Отказано в доступе");
       return;

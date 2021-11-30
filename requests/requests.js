@@ -9,7 +9,7 @@ export const getRole = async (login, password) => {
     password
   );
 
-  if (result) return result[0].role;
+  if (result[0] !== undefined) return result[0].role;
   return undefined;
 };
 
@@ -73,6 +73,13 @@ export const setService = async (login, password, service) => {
   else return undefined;
 };
 
+export const createUser = async (login, password, user) => {
+  const result = await postRequest(`${API_URL}users`, login, password, user);
+
+  if (result) return result;
+  else return undefined;
+};
+
 const postRequest = async (url, login, password, postData) => {
   try {
     const response = await fetch(url, {
@@ -125,6 +132,56 @@ const deleteRequest = async (url, login, password) => {
         [LOGIN_HEADER]: login,
         [PASSWORD_HEADER]: password,
       },
+    });
+
+    return await response.status;
+  } catch (err) {
+    console.log(err);
+  }
+
+  return undefined;
+};
+
+// PATCH
+
+export const changePassword = async (login, pass, newPassword) => {
+  const result = await patchRequest(
+    `${API_URL}users?name=eq.${login}`,
+    login,
+    pass,
+    {
+      password: newPassword,
+    }
+  );
+
+  if (result) return result;
+  else return undefined;
+};
+
+export const changeRole = async (login, pass, userName, newRole) => {
+  const result = await patchRequest(
+    `${API_URL}users?name=eq.${userName}`,
+    login,
+    pass,
+    {
+      role: newRole,
+    }
+  );
+
+  if (result) return result;
+  else return undefined;
+};
+
+const patchRequest = async (url, login, password, patchData) => {
+  try {
+    const response = await fetch(url, {
+      method: "PATCH",
+      headers: {
+        [LOGIN_HEADER]: login,
+        [PASSWORD_HEADER]: password,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(patchData),
     });
 
     return await response.status;
