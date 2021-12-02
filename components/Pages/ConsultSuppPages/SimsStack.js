@@ -1,22 +1,74 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
 
-// css
-import { mainStyle } from "../../../MainStyle";
+// stack nav
+import { createStackNavigator } from "@react-navigation/stack";
+
+// components
+
+import { Sims, Sim, PassportInput } from "./";
+import { TariffsList, TariffItem } from "../Tariffs/";
+import { ServicesList, ServiceItem } from "../Services";
 
 export const SimsStack = () => {
+  const Stack = createStackNavigator();
+
   return (
-    <View style={styles.container}>
-      <Text>Sim-карты</Text>
-    </View>
+    <Stack.Navigator
+      initialRouteName="PassportInput"
+      screenOptions={{
+        headerStyle: { backgroundColor: "#000" },
+        headerTintColor: "#fff",
+        // headerStatusBarHeight: 50,
+        headerTitleStyle: { fontWeight: "bold" },
+      }}
+    >
+      <Stack.Screen
+        name="PassportInput"
+        component={PassportInput}
+        options={{ title: "Получение данных" }}
+      />
+      <Stack.Screen
+        name="Sims"
+        component={Sims}
+        options={{
+          title: "Sim-карты",
+        }}
+      />
+      <Stack.Screen
+        name="Sim"
+        component={Sim}
+        options={{
+          title: "Sim-карта",
+        }}
+      />
+      <Stack.Screen
+        name="TariffsList"
+        component={TariffsList}
+        options={{
+          title: "Доступные тарифы",
+        }}
+      />
+      <Stack.Screen
+        name="TariffItem"
+        component={TariffItem}
+        options={{
+          title: "Подключенный тариф",
+        }}
+      />
+      <Stack.Screen
+        name="ServicesList"
+        component={ServicesList}
+        options={{
+          title: "Подключенные услуги",
+        }}
+      />
+      <Stack.Screen
+        name="ServiceItem"
+        component={ServiceItem}
+        options={{
+          title: "Услуга",
+        }}
+      />
+    </Stack.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#FBEEC1",
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

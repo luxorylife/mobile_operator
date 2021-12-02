@@ -17,7 +17,12 @@ import { changeRole } from "../../../requests/requests";
 import { useSelector, useDispatch } from "react-redux";
 
 // roles
-import { ROLE_BOSS, ROLE_CONSULT, ROLE_SUPP } from "../../../const/roles";
+import {
+  ROLE_BOSS,
+  ROLE_CONSULT,
+  ROLE_SUPP,
+  ROLE_CLOSE,
+} from "../../../const/roles";
 
 // toast
 import Toast from "react-native-toast-message";
@@ -89,6 +94,9 @@ export const ChangeRoleModal = ({ openModal, closeModal }) => {
                 </Radio>
                 <Radio colorScheme="warning" value={ROLE_SUPP} my={1}>
                   Тех. поддержка
+                </Radio>
+                <Radio value={ROLE_CLOSE} my={1}>
+                  Выключен
                 </Radio>
               </Radio.Group>
             </FormControl>

@@ -27,6 +27,33 @@ export const getServices = async (login, password) => {
   return undefined;
 };
 
+export const getCustomer = async (
+  login,
+  password,
+  passportSeries,
+  passportNumber
+) => {
+  const result = await getRequest(
+    `${API_URL}customers?passport_series=eq.${passportSeries}&passport_number=eq.${passportNumber}`,
+    login,
+    password
+  );
+
+  if (result) return result;
+  return undefined;
+};
+
+export const getSims = async (login, password, customerId) => {
+  const result = await getRequest(
+    `${API_URL}rpc/list_sims?customer_id=${customerId}`,
+    login,
+    password
+  );
+
+  if (result) return result;
+  return undefined;
+};
+
 const getRequest = async (url, login, password) => {
   try {
     const response = await fetch(url, {
@@ -78,6 +105,27 @@ export const createUser = async (login, password, user) => {
 
   if (result) return result;
   else return undefined;
+};
+
+export const createCustomer = async (login, password, customer) => {
+  try {
+    const response = await fetch(`${API_URL}customers`, {
+      method: "POST",
+      headers: {
+        [LOGIN_HEADER]: login,
+        [PASSWORD_HEADER]: password,
+        "Content-Type": "application/json;charset=utf-8",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify(customer),
+    });
+
+    return await response.json();
+  } catch (err) {
+    console.log(err);
+  }
+
+  return undefined;
 };
 
 const postRequest = async (url, login, password, postData) => {

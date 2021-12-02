@@ -65,6 +65,13 @@ export const Profile = () => {
           <Text style={styles.descr}>Ваша роль: </Text>
           <Text style={styles.value}>{user.role}</Text>
         </View>
+        {user.role !== ROLE_BOSS && (
+          <UserMenu
+            changePass={() => {
+              setModalChangePassword(true);
+            }}
+          />
+        )}
       </View>
       {user.role === ROLE_BOSS && (
         <BossMenu
@@ -78,13 +85,7 @@ export const Profile = () => {
           }}
         />
       )}
-      {user.role !== ROLE_BOSS && (
-        <UserMenu
-          changePass={() => {
-            setModalChangePassword(true);
-          }}
-        />
-      )}
+
       {/* <Button title="Выйти из аккаунта" onPress={logOut} /> */}
 
       <TouchableOpacity
@@ -118,23 +119,23 @@ export const Profile = () => {
 
 const BossMenu = ({ create, changePass, changeRole, changeUserPass }) => (
   <View style={styles.menu}>
-    <TouchableOpacity style={styles.button} onPress={create}>
+    <TouchableOpacity style={styles.button2} onPress={create}>
       <Text style={{ fontWeight: "bold" }}>Добавить пользователя</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.button} onPress={changePass}>
+    <TouchableOpacity style={styles.button2} onPress={changePass}>
       <Text style={{ fontWeight: "bold" }}>Изменить пароль</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.button} onPress={changeRole}>
+    <TouchableOpacity style={styles.button2} onPress={changeRole}>
       <Text style={{ fontWeight: "bold" }}>Изменить роль пользователя</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.button} onPress={changeUserPass}>
+    <TouchableOpacity style={styles.button2} onPress={changeUserPass}>
       <Text style={{ fontWeight: "bold" }}>Изменить пароль пользователя</Text>
     </TouchableOpacity>
   </View>
 );
 
 const UserMenu = ({ changePass }) => (
-  <View style={styles.menu}>
+  <View>
     <TouchableOpacity style={styles.button} onPress={changePass}>
       <Text style={{ fontWeight: "bold" }}>Изменить пароль</Text>
     </TouchableOpacity>
@@ -153,6 +154,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     borderRadius: 10,
+    alignItems: "center",
   },
   line: {
     flexDirection: "row",
@@ -172,6 +174,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   button: {
+    alignItems: "center",
+    borderRadius: 100,
+    padding: 8,
+    width: "50%",
+    backgroundColor: "#7395AE",
+    marginVertical: 10,
+  },
+  button2: {
     alignItems: "center",
     borderRadius: 100,
     padding: 8,
