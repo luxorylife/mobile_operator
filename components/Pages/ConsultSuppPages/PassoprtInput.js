@@ -12,7 +12,8 @@ import {
 import { getCustomer, createCustomer } from "../../../requests/requests";
 
 // redux
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setCustomer } from "../../../store/actions";
 
 // nav
 import { useIsFocused } from "@react-navigation/native";
@@ -20,14 +21,18 @@ import { useIsFocused } from "@react-navigation/native";
 export const PassportInput = ({ navigation }) => {
   const user = useSelector((state) => state.user);
 
+  const [isBtnAlive, setIsBtnAlive] = useState(true);
+
   const [isComplete, setIsComplete] = useState(false);
   const [pS, setPs] = useState("");
   const [pN, setPn] = useState("");
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
-  const [customer, setCustomer] = useState({});
+  const [customer, setCustomerState] = useState({});
 
   const focus = useIsFocused();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setPs("");
@@ -35,25 +40,26 @@ export const PassportInput = ({ navigation }) => {
     setName("");
     setAddress("");
     setIsComplete(false);
-    setCustomer({});
   }, [focus]);
 
   useEffect(async () => {
     setIsComplete(false);
     if (pS.length === 4 && pN.length === 6 && Number(pN) && Number(pS)) {
+      setIsBtnAlive(false);
       const response = await getCustomer(user.login, user.password, pS, pN);
 
       if (response.length > 0) {
-        setCustomer(response[0]);
+        setCustomerState(response[0]);
         setName(response[0].name);
         setAddress(response[0].address);
       } else {
-        setCustomer({});
         setName("");
         setAddress("");
+        setCustomerState({});
       }
       setIsComplete(true);
-    } else setCustomer({});
+      setIsBtnAlive(true);
+    }
   }, [pS, pN]);
 
   const btnHandler = async () => {
@@ -72,8 +78,9 @@ export const PassportInput = ({ navigation }) => {
     }
 
     if (customer.name) {
-      console.log(customer);
-      navigation.navigate("Sims", { customer: customer });
+      // console.log(customer);
+      dispatch(setCustomer(customer));
+      navigation.navigate("Sims");
       return;
     }
 
@@ -91,9 +98,14 @@ export const PassportInput = ({ navigation }) => {
       newCustomer
     );
 
+    console.log(1);
+
     if (response[0]) {
-      console.log(response);
-      navigation.navigate("Sims", { customer: response[0] });
+      // console.log(response);
+      console.log(2);
+
+      dispatch(setCustomer(response[0]));
+      navigation.navigate("Sims");
       return;
     }
   };
@@ -109,6 +121,7 @@ export const PassportInput = ({ navigation }) => {
             maxLength={4}
             value={pS}
             onChangeText={(text) => setPs(text)}
+            clearButtonMode="always"
           />
         </View>
         <View style={styles.row}>
@@ -142,7 +155,11 @@ export const PassportInput = ({ navigation }) => {
           </>
         )}
       </View>
-      <TouchableOpacity style={styles.button} onPress={btnHandler}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={btnHandler}
+        disable={isBtnAlive}
+      >
         <Text>Получить данные</Text>
       </TouchableOpacity>
     </View>

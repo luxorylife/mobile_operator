@@ -1,4 +1,4 @@
-import { LOG_IN_OUT, SET_USER } from "./actionTypes";
+import { LOG_IN_OUT, SET_USER, SET_CUSTOMER } from "./actionTypes";
 
 export const reducer = (state, action) => {
   switch (action.type) {
@@ -14,6 +14,13 @@ export const reducer = (state, action) => {
       return {
         ...state,
         user: action.payload,
+      };
+
+    case SET_CUSTOMER:
+      console.log("setting customer");
+      return {
+        ...state,
+        customer: action.payload,
       };
 
     default:
