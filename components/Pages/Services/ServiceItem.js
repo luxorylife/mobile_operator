@@ -9,20 +9,30 @@ import {
 } from "react-native";
 
 // api
-import { setService, deleteService } from "../../../requests/requests";
+import {
+  setService,
+  deleteService,
+  changeService,
+} from "../../../requests/requests";
 
 // redux
 import { useSelector } from "react-redux";
 
+// role
+import { ROLE_BOSS } from "../../../const/roles";
+
 export const ServiceItem = ({ route, navigation }) => {
   if (route.params.isNew) return <NewService nav={navigation} />;
   else {
-    return <FillService service={route.params.item} nav={navigation} />;
+    return (
+      <FillService service={route.params.item} nav={navigation} route={route} />
+    );
   }
 };
 
-const FillService = ({ service, nav }) => {
+const FillService = ({ service, nav, route }) => {
   const user = useSelector((state) => state.user);
+  const sim = useSelector((state) => state.sim);
 
   const btnHandler = async () => {
     // удаление услуги
@@ -49,6 +59,30 @@ const FillService = ({ service, nav }) => {
     ]);
   };
 
+  const btnHandlerShop = async () => {
+    if (route.params.active) {
+      console.log("delete");
+      const data = {
+        active: false,
+        sim_id: sim.sim_id,
+        service_id: service.id,
+      };
+      const response = await changeService(user.login, user.password, data);
+      console.log(response);
+      nav.navigate("ServicesList");
+    } else {
+      console.log("add");
+      const data = {
+        active: true,
+        sim_id: sim.sim_id,
+        service_id: service.id,
+      };
+      const response = await changeService(user.login, user.password, data);
+      console.log(response);
+      nav.navigate("ServicesList");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.inputs}>
@@ -70,9 +104,28 @@ const FillService = ({ service, nav }) => {
         </View>
       </View>
       <View style={styles.btn_view}>
-        <TouchableOpacity style={styles.buttonDel} onPress={() => btnHandler()}>
-          <Text style={styles.btn_del_text}>Удалить</Text>
-        </TouchableOpacity>
+        {ROLE_BOSS === user.role ? (
+          <TouchableOpacity
+            style={styles.buttonDel}
+            onPress={() => btnHandler()}
+          >
+            <Text style={styles.btn_del_text}>Удалить</Text>
+          </TouchableOpacity>
+        ) : route.params.active ? (
+          <TouchableOpacity
+            style={styles.buttonDel}
+            onPress={() => btnHandlerShop()}
+          >
+            <Text style={styles.btn_del_text}>Отключить</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.buttonDel}
+            onPress={() => btnHandlerShop()}
+          >
+            <Text style={styles.btn_del_text}>Подключить</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -182,6 +235,7 @@ const styles = StyleSheet.create({
   },
   textNamed: {
     fontWeight: "normal",
+    width: "80%",
   },
   inputs: {
     backgroundColor: "#FBEEC1",

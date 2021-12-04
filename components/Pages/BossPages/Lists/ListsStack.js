@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 // stack nav
@@ -9,8 +9,16 @@ import { Lists } from "./Lists";
 import { TariffsList, TariffItem } from "../../Tariffs";
 import { ServicesList, ServiceItem } from "../../Services";
 
+// role
+import { ROLE_BOSS } from "../../../../const/roles";
+
+// redux
+import { useSelector } from "react-redux";
+
 export const ListsStack = () => {
   const Stack = createStackNavigator();
+
+  const user = useSelector((state) => state.user);
 
   return (
     <Stack.Navigator
@@ -32,14 +40,19 @@ export const ListsStack = () => {
         component={TariffsList}
         options={({ navigation }) => ({
           title: "Список тарифов",
-          headerRight: () => (
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => navigation.navigate("TariffItem", { isNew: true })}
-            >
-              <Text style={styles.text}>Добавить</Text>
-            </TouchableOpacity>
-          ),
+          headerRight:
+            user.role === ROLE_BOSS
+              ? () => (
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() =>
+                      navigation.navigate("TariffItem", { isNew: true })
+                    }
+                  >
+                    <Text style={styles.text}>Добавить</Text>
+                  </TouchableOpacity>
+                )
+              : () => {},
         })}
       />
       <Stack.Screen
@@ -54,16 +67,19 @@ export const ListsStack = () => {
         component={ServicesList}
         options={({ navigation }) => ({
           title: "Список услуг",
-          headerRight: () => (
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() =>
-                navigation.navigate("ServiceItem", { isNew: true })
-              }
-            >
-              <Text style={styles.text}>Добавить</Text>
-            </TouchableOpacity>
-          ),
+          headerRight:
+            user.role === ROLE_BOSS
+              ? () => (
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() =>
+                      navigation.navigate("ServiceItem", { isNew: true })
+                    }
+                  >
+                    <Text style={styles.text}>Добавить</Text>
+                  </TouchableOpacity>
+                )
+              : () => {},
         })}
       />
       <Stack.Screen

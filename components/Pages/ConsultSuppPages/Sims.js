@@ -1,18 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 
 // redux
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 // nav
 import { useIsFocused } from "@react-navigation/native";
 
 // api
 import { getSims } from "../../../requests/requests";
+import { setSim } from "../../../store/actions";
 
 export const Sims = ({ navigation }) => {
   const customer = useSelector((state) => state.customer);
   const user = useSelector((state) => state.user);
+  const sim = useSelector((state) => state.sim);
 
   const [sims, setSims] = useState([]);
 
@@ -22,18 +30,22 @@ export const Sims = ({ navigation }) => {
     const response = await getSims(user.login, user.password, customer.id);
 
     if (response) setSims(response);
-  }, [focus]);
+  }, [focus, sim]);
 
   return (
-    <View>
-      <Text>{`Здравствуйте, ${customer["name"]}!`}</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>{`Здравствуйте, ${
+        customer["name"].split(" ").length > 1
+          ? customer["name"].split(" ")[1]
+          : customer["name"]
+      }!`}</Text>
       <FlatList
         style={{ width: "100%" }}
         data={sims}
         renderItem={({ item, index }) => (
           <ListItem
             sim={item}
-            nav={() => navigation.navigate("Sim")}
+            nav={() => navigation.navigate("Sim", { isNew: false })}
             i={index}
           />
         )}
@@ -44,14 +56,43 @@ export const Sims = ({ navigation }) => {
 };
 
 const ListItem = ({ sim, i, nav }) => {
+  const dispatch = useDispatch();
+
   const btnhandler = () => {
     // redux
+    dispatch(
+      setSim({
+        sim_id: sim.sim_id,
+        phone_number: sim.phone_number,
+      })
+    );
+
+    // nav
+    nav();
   };
 
   return (
-    <TouchableOpacity onPress={btnhandler}>
+    <TouchableOpacity onPress={btnhandler} style={styles.card}>
       <Text>{`Sim №${i + 1}`}</Text>
       <Text>{sim.phone_number}</Text>
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    paddingVertical: 16,
+  },
+  card: {
+    borderWidth: 1,
+    borderRadius: 8,
+    margin: 8,
+    padding: 8,
+  },
+  title: {
+    fontWeight: "bold",
+    fontSize: 20,
+  },
+});

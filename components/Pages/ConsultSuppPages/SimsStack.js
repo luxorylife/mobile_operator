@@ -5,13 +5,27 @@ import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 // components
-
 import { Sims, Sim, PassportInput } from "./";
 import { TariffsList, TariffItem } from "../Tariffs/";
 import { ServicesList, ServiceItem } from "../Services";
 
+// role
+import { ROLE_CONSULT, ROLE_SUPPORT } from "../../../const/roles";
+
+// redux
+import { useSelector, useDispatch } from "react-redux";
+
+// api
+import { addSim } from "../../../requests/requests";
+import { setSim } from "../../../store/actions";
+
 export const SimsStack = () => {
   const Stack = createStackNavigator();
+
+  const user = useSelector((state) => state.user);
+  const customer = useSelector((state) => state.customer);
+
+  const dispatch = useDispatch();
 
   return (
     <Stack.Navigator
@@ -32,23 +46,27 @@ export const SimsStack = () => {
         name="Sims"
         component={Sims}
         options={({ navigation }) => ({
-          title: "Список услуг",
-          headerRight: () => (
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => navigation.navigate("Sim", { isNew: true })}
-            >
-              <Text style={styles.text}>Добавить</Text>
-            </TouchableOpacity>
-          ),
+          title: "Список sim-карт",
+          headerRight: () =>
+            user.role === ROLE_CONSULT && (
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  addSim(user.login, user.password, customer.id, 1);
+                  dispatch(setSim({}));
+                }}
+              >
+                <Text style={styles.text}>Добавить</Text>
+              </TouchableOpacity>
+            ),
         })}
       />
       <Stack.Screen
         name="Sim"
         component={Sim}
-        options={{
-          title: "Sim-карта",
-        }}
+        options={({ route }) => ({
+          title: route.params.isNew ? "Новая sim-карта" : "Sim-карта",
+        })}
       />
       <Stack.Screen
         name="TariffsList"
@@ -60,9 +78,9 @@ export const SimsStack = () => {
       <Stack.Screen
         name="TariffItem"
         component={TariffItem}
-        options={{
-          title: "Подключенный тариф",
-        }}
+        options={({ route }) => ({
+          title: route.params.change ? "Нвоый тариф" : "Подключенный тариф",
+        })}
       />
       <Stack.Screen
         name="ServicesList"

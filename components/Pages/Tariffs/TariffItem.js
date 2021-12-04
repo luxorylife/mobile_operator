@@ -9,20 +9,30 @@ import {
 } from "react-native";
 
 // api
-import { setTariff, deleteTariff } from "../../../requests/requests";
+import {
+  setTariff,
+  deleteTariff,
+  changeTariff,
+} from "../../../requests/requests";
 
 // redux
 import { useSelector } from "react-redux";
 
+// role
+import { ROLE_BOSS } from "../../../const/roles";
+
 export const TariffItem = ({ route, navigation }) => {
   if (route.params.isNew) return <NewTariff nav={navigation} />;
   else {
-    return <FillTariff tariff={route.params.item} nav={navigation} />;
+    return (
+      <FillTariff tariff={route.params.item} nav={navigation} route={route} />
+    );
   }
 };
 
-const FillTariff = ({ tariff, nav }) => {
+const FillTariff = ({ tariff, nav, route }) => {
   const user = useSelector((state) => state.user);
+  const sim = useSelector((state) => state.sim);
 
   const btnHandler = async () => {
     // удаление тарифа
@@ -47,6 +57,23 @@ const FillTariff = ({ tariff, nav }) => {
         onPress: () => console.log("Cancel Pressed"),
       },
     ]);
+  };
+
+  const btnHandlerChange = async () => {
+    if (!route.params.change) nav.navigate("TariffsList");
+    else {
+      // запрос к api на изменение
+
+      const data = {
+        sim_id: sim.sim_id,
+        tariff_id: tariff.id,
+      };
+
+      const status = await changeTariff(user.login, user.password, data);
+      console.log(status);
+
+      nav.navigate("Sim", { isNew: false });
+    }
   };
 
   return (
@@ -92,9 +119,28 @@ const FillTariff = ({ tariff, nav }) => {
         </View>
       </View>
       <View style={styles.btn_view}>
-        <TouchableOpacity style={styles.buttonDel} onPress={() => btnHandler()}>
-          <Text style={styles.btn_del_text}>Удалить</Text>
-        </TouchableOpacity>
+        {user.role === ROLE_BOSS ? (
+          <TouchableOpacity
+            style={styles.buttonDel}
+            onPress={() => btnHandler()}
+          >
+            <Text style={styles.btn_del_text}>Удалить</Text>
+          </TouchableOpacity>
+        ) : !route.params.change ? (
+          <TouchableOpacity
+            style={styles.buttonDel}
+            onPress={() => btnHandlerChange()}
+          >
+            <Text style={styles.btn_del_text}>Изменить</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.buttonDel}
+            onPress={() => btnHandlerChange()}
+          >
+            <Text style={styles.btn_del_text}>Подтвердить</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

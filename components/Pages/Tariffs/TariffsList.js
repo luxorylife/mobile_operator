@@ -19,6 +19,9 @@ import { useSelector } from "react-redux";
 // icons
 import { AntDesign } from "@expo/vector-icons";
 
+// role
+import { ROLE_BOSS } from "../../../const/roles";
+
 export const TariffsList = ({ navigation, route }) => {
   const [tariffs, setTariffs] = useState([]);
 
@@ -44,7 +47,16 @@ export const TariffsList = ({ navigation, route }) => {
           <ListItem
             tariff={item}
             nav={() =>
-              navigation.navigate("TariffItem", { item: item, isNew: false })
+              user.role === ROLE_BOSS
+                ? navigation.navigate("TariffItem", {
+                    item: item,
+                    isNew: false,
+                  })
+                : navigation.navigate("TariffItem", {
+                    item: item,
+                    isNew: false,
+                    change: true,
+                  })
             }
           />
         )}

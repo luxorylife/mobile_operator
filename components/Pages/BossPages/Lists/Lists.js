@@ -8,7 +8,10 @@ export const Lists = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Item title="Тарифы" nav={() => navigation.navigate("TariffsList")} />
-      <Item title="Услуги" nav={() => navigation.navigate("ServicesList")} />
+      <Item
+        title="Услуги"
+        nav={() => navigation.navigate("ServicesList", { services: undefined })}
+      />
     </View>
   );
 };

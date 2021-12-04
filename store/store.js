@@ -6,6 +6,7 @@ const initialStore = {
   isLogin: false,
   user: {},
   customer: {},
+  sim: {},
 };
 
 export const store = createStore(reducer, initialStore, composeWithDevTools());

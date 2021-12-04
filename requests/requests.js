@@ -20,10 +20,32 @@ export const getTariffs = async (login, password) => {
   return undefined;
 };
 
+export const getTariff = async (login, password, tariffName) => {
+  const result = await getRequest(
+    `${API_URL}tariffs?name=eq.${tariffName}`,
+    login,
+    password
+  );
+
+  if (result[0]) return result[0];
+  return undefined;
+};
+
 export const getServices = async (login, password) => {
   const result = await getRequest(`${API_URL}services`, login, password);
 
   if (result) return result;
+  return undefined;
+};
+
+export const getService = async (login, password, serviceName) => {
+  const result = await getRequest(
+    `${API_URL}services?name=eq.${serviceName}`,
+    login,
+    password
+  );
+
+  if (result[0]) return result[0];
   return undefined;
 };
 
@@ -54,6 +76,28 @@ export const getSims = async (login, password, customerId) => {
   return undefined;
 };
 
+export const getSimTariff = async (login, password, simId) => {
+  const result = await getRequest(
+    `${API_URL}sim_tariffs?select=tariffs(name)&sim_id=eq.${simId}&order=date.desc&limit=1`,
+    login,
+    password
+  );
+
+  if (result[0]) return result[0];
+  return undefined;
+};
+
+export const getSimServices = async (login, password, simId) => {
+  const result = await getRequest(
+    `${API_URL}services?select=id,name,description,daily_price,activation_fee,sim_services(active)&sim_services.sim_id=eq.${simId}&sim_services.limit=1&sim_services.order=date.desc`,
+    login,
+    password
+  );
+
+  if (result) return result;
+  return undefined;
+};
+
 const getRequest = async (url, login, password) => {
   try {
     const response = await fetch(url, {
@@ -65,6 +109,8 @@ const getRequest = async (url, login, password) => {
     });
 
     const data = await response.json();
+
+    //console.log(data);
 
     return data;
   } catch (err) {
@@ -128,6 +174,40 @@ export const createCustomer = async (login, password, customer) => {
   return undefined;
 };
 
+export const changeTariff = async (login, password, data) => {
+  const result = await postRequest(
+    `${API_URL}sim_tariffs`,
+    login,
+    password,
+    data
+  );
+
+  if (result) return result;
+  else return undefined;
+};
+
+export const changeService = async (login, password, data) => {
+  const result = await postRequest(
+    `${API_URL}sim_services`,
+    login,
+    password,
+    data
+  );
+
+  if (result) return result;
+  else return undefined;
+};
+
+export const addSim = async (login, password, customerId, tariffId) => {
+  const result = await postRequest(`${API_URL}rpc/give_sim`, login, password, {
+    customer_id: customerId,
+    tariff_id: tariffId,
+  });
+
+  if (result) return result;
+  return undefined;
+};
+
 const postRequest = async (url, login, password, postData) => {
   try {
     const response = await fetch(url, {
@@ -139,7 +219,7 @@ const postRequest = async (url, login, password, postData) => {
       },
       body: JSON.stringify(postData),
     });
-
+    console.log(response.status);
     return await response.status;
   } catch (err) {
     console.log(err);

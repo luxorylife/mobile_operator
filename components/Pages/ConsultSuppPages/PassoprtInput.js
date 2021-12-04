@@ -78,7 +78,7 @@ export const PassportInput = ({ navigation }) => {
     }
 
     if (customer.name) {
-      // console.log(customer);
+      console.log(customer);
       dispatch(setCustomer(customer));
       navigation.navigate("Sims");
       return;
@@ -98,11 +98,11 @@ export const PassportInput = ({ navigation }) => {
       newCustomer
     );
 
-    console.log(1);
+    // console.log(1);
 
     if (response[0]) {
       // console.log(response);
-      console.log(2);
+      // console.log(2);
 
       dispatch(setCustomer(response[0]));
       navigation.navigate("Sims");

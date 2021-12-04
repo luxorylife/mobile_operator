@@ -12,6 +12,7 @@ import { useIsFocused } from "@react-navigation/native";
 
 // api
 import { getServices } from "../../../requests/requests";
+import { getSimServices } from "../../../requests/requests";
 
 // redux
 import { useSelector } from "react-redux";
@@ -19,10 +20,14 @@ import { useSelector } from "react-redux";
 // icons
 import { AntDesign } from "@expo/vector-icons";
 
-export const ServicesList = ({ navigation }) => {
+// role
+import { ROLE_BOSS } from "../../../const/roles";
+
+export const ServicesList = ({ navigation, route }) => {
   const [services, setServices] = useState([]);
 
   const user = useSelector((state) => state.user);
+  const sim = useSelector((state) => state.sim);
 
   const isFocused = useIsFocused();
 
@@ -31,20 +36,56 @@ export const ServicesList = ({ navigation }) => {
   }, [isFocused]);
 
   const loadData = async () => {
-    const response = await getServices(user.login, user.password);
-    setServices(response);
+    if (user.role === ROLE_BOSS) {
+      const response = await getServices(user.login, user.password);
+      setServices(response);
+    } else {
+      const response = await getSimServices(
+        user.login,
+        user.password,
+        sim.sim_id
+      );
+      setServices(response);
+    }
   };
 
   return (
     <View style={styles.container}>
       <FlatList
         style={{ width: "100%" }}
-        data={services}
+        data={
+          user.role === ROLE_BOSS
+            ? services
+            : services.sort((a, b) => {
+                if (a.sim_services[0]) return -1;
+                return 1;
+              })
+        }
         renderItem={({ item }) => (
           <ListItem
             service={item}
-            nav={() =>
-              navigation.navigate("ServiceItem", { item: item, isNew: false })
+            nav={
+              item.sim_services
+                ? item.sim_services[0]
+                  ? () => {
+                      navigation.navigate("ServiceItem", {
+                        item: item,
+                        isNew: false,
+                        active: true,
+                      });
+                    }
+                  : () => {
+                      navigation.navigate("ServiceItem", {
+                        item: item,
+                        isNew: false,
+                        active: false,
+                      });
+                    }
+                : () =>
+                    navigation.navigate("ServiceItem", {
+                      item: item,
+                      isNew: false,
+                    })
             }
           />
         )}
@@ -56,11 +97,23 @@ export const ServicesList = ({ navigation }) => {
 
 const ListItem = (props) => (
   <TouchableOpacity
-    style={styles.button}
+    style={[styles.button]}
     activeOpacity={0.7}
     onPress={props.nav}
   >
-    <Text style={styles.header}>{props.service.name}</Text>
+    <View style={{ width: "50%" }}>
+      <Text style={styles.header}>{props.service.name}</Text>
+      {props.service.sim_services ? (
+        props.service.sim_services.length &&
+        props.service.sim_services[0].active ? (
+          <Text style={{ color: "green" }}>Статус: Активна</Text>
+        ) : (
+          <Text style={{ color: "red" }}>Статус: Неактивна</Text>
+        )
+      ) : (
+        <></>
+      )}
+    </View>
     <Text>{`${props.service.daily_price} руб./день`}</Text>
     <AntDesign name="rightcircle" size={32} color="black" />
   </TouchableOpacity>
@@ -78,10 +131,16 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderRadius: 8,
   },
+  btnRed: {
+    borderColor: "red",
+  },
+  btnGreen: {
+    borderColor: "green",
+  },
   header: {
     fontSize: 20,
     fontWeight: "bold",
-    width: "50%",
+    width: "100%",
   },
   container: {
     backgroundColor: "#8EE4AF",
