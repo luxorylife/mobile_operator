@@ -1,4 +1,10 @@
-import { LOG_IN_OUT, SET_USER, SET_CUSTOMER, SET_SIM } from "./actionTypes";
+import {
+  LOG_IN_OUT,
+  SET_USER,
+  SET_CUSTOMER,
+  SET_SIM,
+  SET_REPORT,
+} from "./actionTypes";
 
 export const logInOutAction = (data) => {
   return {
@@ -24,6 +30,13 @@ export const setCustomer = (data) => {
 export const setSim = (data) => {
   return {
     type: SET_SIM,
+    payload: data,
+  };
+};
+
+export const setReport = (data) => {
+  return {
+    type: SET_REPORT,
     payload: data,
   };
 };

@@ -100,7 +100,7 @@ const consultNav = () => {
       }}
     >
       <Tab.Screen
-        name="Sim"
+        name="SimStack"
         component={SimsStack}
         options={{
           tabBarLabel: "Sim-карты",

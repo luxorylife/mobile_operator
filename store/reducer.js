@@ -1,4 +1,10 @@
-import { LOG_IN_OUT, SET_USER, SET_CUSTOMER, SET_SIM } from "./actionTypes";
+import {
+  LOG_IN_OUT,
+  SET_USER,
+  SET_CUSTOMER,
+  SET_SIM,
+  SET_REPORT,
+} from "./actionTypes";
 
 export const reducer = (state, action) => {
   switch (action.type) {
@@ -28,6 +34,13 @@ export const reducer = (state, action) => {
       return {
         ...state,
         sim: action.payload,
+      };
+
+    case SET_REPORT:
+      console.log("setting report");
+      return {
+        ...state,
+        report: action.payload,
       };
 
     default:

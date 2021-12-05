@@ -300,6 +300,18 @@ export const changeRole = async (login, pass, userName, newRole) => {
   else return undefined;
 };
 
+export const updateCustomer = async (login, pass, customerId, customer) => {
+  const result = await patchRequest(
+    `${API_URL}customers?id=eq.${customerId}`,
+    login,
+    pass,
+    customer
+  );
+
+  if (result) return result;
+  else return undefined;
+};
+
 const patchRequest = async (url, login, password, patchData) => {
   try {
     const response = await fetch(url, {

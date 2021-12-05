@@ -9,7 +9,11 @@ import {
 } from "react-native";
 
 // api
-import { getCustomer, createCustomer } from "../../../requests/requests";
+import {
+  getCustomer,
+  createCustomer,
+  updateCustomer,
+} from "../../../requests/requests";
 
 // redux
 import { useSelector, useDispatch } from "react-redux";
@@ -78,9 +82,63 @@ export const PassportInput = ({ navigation }) => {
     }
 
     if (customer.name) {
-      console.log(customer);
-      dispatch(setCustomer(customer));
-      navigation.navigate("Sims");
+      if (
+        name !== customer.name ||
+        address !== customer.address ||
+        pS !== customer.passport_series ||
+        pN !== customer.passport_number
+      ) {
+        Alert.alert(
+          "Предупреждение",
+          "Введенные данные отличаются от уже существующих. Продолжить?",
+          [
+            {
+              text: "ОК",
+              onPress: async () => {
+                const response = await updateCustomer(
+                  user.login,
+                  user.password,
+                  customer.id,
+                  {
+                    name: name,
+                    address: address,
+                    passport_series: pS,
+                    passport_number: pN,
+                  }
+                );
+                console.log(response);
+                if (response)
+                  if (response < 300) {
+                    dispatch(
+                      setCustomer({
+                        id: customer.id,
+                        name: name,
+                        address: address,
+                        passport_series: pS,
+                        passport_number: pN,
+                      })
+                    );
+                    navigation.navigate("Sims");
+                  } else {
+                    Alert.alert(
+                      "Ошибка",
+                      "Целостность данных нарушена! Возможно, вы указали неуникальные данные"
+                    );
+                  }
+              },
+              style: "ok",
+            },
+            {
+              text: "Отмена",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
+            },
+          ]
+        );
+      } else {
+        dispatch(setCustomer(customer));
+        navigation.navigate("Sims");
+      }
       return;
     }
 
@@ -107,6 +165,11 @@ export const PassportInput = ({ navigation }) => {
       dispatch(setCustomer(response[0]));
       navigation.navigate("Sims");
       return;
+    } else {
+      Alert.alert(
+        "Ошибка",
+        "Целостность данных нарушена! Возможно, вы указали неуникальные данные"
+      );
     }
   };
 

@@ -7,6 +7,7 @@ const initialStore = {
   user: {},
   customer: {},
   sim: {},
+  report: {},
 };
 
 export const store = createStore(reducer, initialStore, composeWithDevTools());
