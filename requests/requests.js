@@ -78,7 +78,7 @@ export const getSims = async (login, password, customerId) => {
 
 export const getSimTariff = async (login, password, simId) => {
   const result = await getRequest(
-    `${API_URL}sim_tariffs?select=tariffs(name)&sim_id=eq.${simId}&order=date.desc&limit=1`,
+    `${API_URL}sim_tariffs?select=tariffs(name),sims(active,pin1,pin2,puk1,puk2)&sim_id=eq.${simId}&order=date.desc&limit=1`,
     login,
     password
   );
@@ -93,6 +93,30 @@ export const getSimServices = async (login, password, simId) => {
     login,
     password
   );
+
+  if (result) return result;
+  return undefined;
+};
+
+export const getCustomersReport = async (login, password) => {
+  const result = await getRequest(
+    `${API_URL}customers_report`,
+    login,
+    password
+  );
+
+  if (result) return result;
+  return undefined;
+};
+
+export const getDatesReport = async (login, password, date) => {
+  const result = await getRequest(
+    `${API_URL}rpc/list_customers_by_date?date=${date}`,
+    login,
+    password
+  );
+
+  console.log(result);
 
   if (result) return result;
   return undefined;
@@ -306,6 +330,34 @@ export const updateCustomer = async (login, pass, customerId, customer) => {
     login,
     pass,
     customer
+  );
+
+  if (result) return result;
+  else return undefined;
+};
+
+export const blockSim = async (login, pass, simId) => {
+  const result = await patchRequest(
+    `${API_URL}sims?id=eq.${simId}`,
+    login,
+    pass,
+    {
+      active: false,
+    }
+  );
+
+  if (result) return result;
+  else return undefined;
+};
+
+export const unblockSim = async (login, pass, simId) => {
+  const result = await patchRequest(
+    `${API_URL}sims?id=eq.${simId}`,
+    login,
+    pass,
+    {
+      active: true,
+    }
   );
 
   if (result) return result;

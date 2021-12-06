@@ -41,12 +41,36 @@ export const ReportsStack = () => {
       <Stack.Screen
         name="Dates"
         component={ReportDates}
-        options={{ title: 'Отчет "Даты"' }}
+        options={() => ({
+          title: 'Отчет "Даты"',
+          headerRight: () => (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={async () => {
+                shareExcel(report, "dates");
+              }}
+            >
+              <Text style={styles.text}>Сохранить</Text>
+            </TouchableOpacity>
+          ),
+        })}
       />
       <Stack.Screen
         name="Customers"
         component={ReportCustomers}
-        options={{ title: 'Отчет "Абоненты"' }}
+        options={() => ({
+          title: 'Отчет "Абоненты"',
+          headerRight: () => (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={async () => {
+                shareExcel(report, "customers");
+              }}
+            >
+              <Text style={styles.text}>Сохранить</Text>
+            </TouchableOpacity>
+          ),
+        })}
       />
       <Stack.Screen
         name="Services"

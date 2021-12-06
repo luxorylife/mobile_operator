@@ -9,13 +9,13 @@ import {
 
 // redux
 import { useSelector, useDispatch } from "react-redux";
+import { setSim } from "../../../store/actions";
 
 // nav
 import { useIsFocused } from "@react-navigation/native";
 
 // api
 import { getSims } from "../../../requests/requests";
-import { setSim } from "../../../store/actions";
 
 export const Sims = ({ navigation }) => {
   const customer = useSelector((state) => state.customer);
